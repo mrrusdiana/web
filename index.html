@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MRUSDIANA</title>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111;
+      --card: #f3f3f3;
+      --border: #ddd;
+      --btn: #000;
+      --btn-text: #fff;
+    }
+
+    body.dark {
+      --bg: #0f0f0f;
+      --text: #f5f5f5;
+      --card: #1e1e1e;
+      --border: #333;
+      --btn: #fff;
+      --btn-text: #000;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .logo {
+      font-size: 20px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: bold;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .toggle-btn {
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      background: none;
+      cursor: pointer;
+    }
+
+    .search-bar {
+      position: sticky;
+      top: 60px;
+      background: var(--bg);
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border);
+      z-index: 900;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+    }
+
+    main {
+      padding: 140px 20px 80px;
+      max-width: 1100px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .card h3 {
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .card a {
+      display: block;
+      margin: 10px;
+      padding: 8px;
+      text-align: center;
+      background: var(--btn);
+      color: var(--btn-text);
+      text-decoration: none;
+    }
+
+    .subscribe-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .subscribe-box {
+      background: var(--bg);
+      padding: 20px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .subscribe-box button {
+      margin-top: 10px;
+      padding: 10px;
+      background: red;
+      color: #fff;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- SUBSCRIBE MODAL -->
+<div id="subscribeModal" class="subscribe-modal">
+  <div class="subscribe-box">
+    <h3>SUPPORT CHANNEL KAMI 🙏</h3>
+    <p>Jangan lupa subscribe<br><strong>MRUSDIANA</strong></p>
+    <button onclick="subscribeNow()">SUBSCRIBE</button>
+  </div>
+</div>
+
+<header>
+  <a href="https://youtube.com/@mrrusdiana" target="_blank" class="logo">MRUSDIANA</a>
+  <button class="toggle-btn" onclick="toggleMode()">Dark / Light</button>
+</header>
+
+<div class="search-bar">
+  <input id="search" placeholder="Cari PART..." />
+</div>
+
+<main id="contentList"></main>
+
+<!-- SCRIPT UMUM -->
+<script>
+  function toggleMode() {
+    document.body.classList.toggle("dark");
+  }
+
+  function subscribeNow() {
+    document.getElementById("subscribeModal").style.display = "none";
+    window.open("https://youtube.com/@mrrusdiana", "_blank");
+  }
+</script>
+
+<!-- SCRIPT FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getFirestore, collection, query, where, orderBy, onSnapshot } 
+    from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBY9IJxvixlZftEsLxXB2DS4yW4KJKsKYo",
+    authDomain: "mrrusdiana.firebaseapp.com",
+    projectId: "mrrusdiana",
+    storageBucket: "mrrusdiana.firebasestorage.app",
+    messagingSenderId: "459473753546",
+    appId: "1:459473753546:web:501a698cf1df38d8bb6b33"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const container = document.getElementById("contentList");
+
+  const q = query(
+    collection(db, "mainContents"),
+    where("active", "==", true),
+    orderBy("order")
+  );
+
+  onSnapshot(q, (snapshot) => {
+    container.innerHTML = "";
+    snapshot.forEach((doc) => {
+      const d = doc.data();
+      container.innerHTML += `
+        <div class="card">
+          <img src="${d.thumbnail}">
+          <h3>${d.title}</h3>
+          <a href="${d.link}">KUNJUNGI</a>
+        </div>
+      `;
+    });
+  });
+</script>
+
+</body>
+</html>
