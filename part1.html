@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PART 1 - MRUSDIANA</title>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111;
+      --card: #f3f3f3;
+      --border: #ddd;
+      --btn: #000;
+      --btn-text: #fff;
+      --danger: #c62828;
+    }
+
+    body.dark {
+      --bg: #0f0f0f;
+      --text: #f5f5f5;
+      --card: #1e1e1e;
+      --border: #333;
+      --btn: #fff;
+      --btn-text: #000;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 20px;
+      letter-spacing: 1px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: bold;
+    }
+
+    .toggle-btn {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      background: none;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    /* CONTENT */
+    main {
+      padding: 100px 20px 60px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      margin-bottom: 25px;
+      padding: 15px;
+    }
+
+    .content-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      margin-bottom: 12px;
+    }
+
+    .content-card h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .links a {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      text-decoration: none;
+      background: var(--btn);
+      color: var(--btn-text);
+      font-size: 14px;
+    }
+
+    .links a.password {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    /* BACK BUTTON */
+    .back-btn {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 40px auto 0;
+      text-align: center;
+      padding: 12px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="https://youtube.com/@mrrusdiana?si=RwiQ3plF1PpMEgsM"
+     target="_blank"
+     class="logo">
+    MRUSDIANA
+  </a>
+  <button class="toggle-btn" onclick="toggleMode()">Dark / Light</button>
+</header>
+
+<main id="contentArea">
+  <!-- 🔥 ISI AKAN DIISI DARI FIRESTORE -->
+</main>
+
+<a href="index.html" class="back-btn">KEMBALI</a>
+
+<script>
+  function toggleMode() {
+    document.body.classList.toggle("dark");
+  }
+</script>
+
+<!-- FIRESTORE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    orderBy,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBY9IJxvixlZftEsLxXB2DS4yW4KJKsKYo",
+    authDomain: "mrrusdiana.firebaseapp.com",
+    projectId: "mrrusdiana",
+    storageBucket: "mrrusdiana.firebasestorage.app",
+    messagingSenderId: "459473753546",
+    appId: "1:459473753546:web:501a698cf1df38d8bb6b33"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const contentArea = document.getElementById("contentArea");
+
+  const q = query(
+    collection(db, "parts"),
+    where("active", "==", true),
+    orderBy("order")
+  );
+
+  onSnapshot(q, (snapshot) => {
+    contentArea.innerHTML = "";
+
+    snapshot.forEach((doc) => {
+      const d = doc.data();
+
+      contentArea.innerHTML += `
+        <div class="content-card">
+          <img src="${d.image}" alt="Thumbnail">
+          <h2>${d.title}</h2>
+          <div class="links">
+            <a href="${d.link_public}" target="_blank">
+              LINK TANPA PASSWORD
+            </a>
+            <a href="${d.link_private}" target="_blank" class="password">
+              LINK DENGAN PASSWORD
+            </a>
+          </div>
+        </div>
+      `;
+    });
+  });
+</script>
+
+</body>
+</html>
