@@ -181,7 +181,7 @@
   const contentArea = document.getElementById("contentArea");
 
   const q = query(
-  collection(db, "parts"),
+  collection(db, "page"),
   where("active", "==", true),
   orderBy("order")
 );
