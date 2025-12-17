@@ -181,10 +181,10 @@
   const contentArea = document.getElementById("contentArea");
 
   const q = query(
-    collection(db, "parts"),
-    where("active", "==", true),
-    orderBy("order")
-  );
+  collection(db, "parts"),
+  where("active", "==", true),
+  orderBy("order")
+);
 
   onSnapshot(q, (snapshot) => {
     contentArea.innerHTML = "";
