@@ -164,6 +164,7 @@ const partId = params.get("part") || "part1";
   getFirestore,
   collection,
   query,
+  orderBy,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
   
@@ -182,7 +183,8 @@ const partId = params.get("part") || "part1";
   const contentArea = document.getElementById("contentArea");
 
   const q = query(
-  collection(db, "parts", partId, "items")
+  collection(db, "parts", partId, "items"),
+  orderBy("order")
 );
 
   onSnapshot(q, (snapshot) => {
