@@ -190,6 +190,7 @@ const partId = params.get("part") || "part1";
 
     snapshot.forEach((doc) => {
   const d = doc.data();
+      document.title = d.title + " - MRUSDIANA";
 
   console.log("DOC ID:", doc.id);
   console.log("DATA:", d);
