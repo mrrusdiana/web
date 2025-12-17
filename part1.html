@@ -181,32 +181,33 @@
   const contentArea = document.getElementById("contentArea");
 
   const q = query(
-  collection(db, "pages"),
-  where("active", "==", true),
-  orderBy("order")
+  collection(db, "pages")
 );
 
   onSnapshot(q, (snapshot) => {
     contentArea.innerHTML = "";
 
     snapshot.forEach((doc) => {
-      const d = doc.data();
+  const d = doc.data();
 
-      contentArea.innerHTML += `
-        <div class="content-card">
-          <img src="${d.image}" alt="Thumbnail">
-          <h2>${d.title}</h2>
-          <div class="links">
-            <a href="${d.link_public}" target="_blank">
-              LINK TANPA PASSWORD
-            </a>
-            <a href="${d.link_private}" target="_blank" class="password">
-              LINK DENGAN PASSWORD
-            </a>
-          </div>
-        </div>
-      `;
-    });
+  console.log("DOC ID:", doc.id);
+  console.log("DATA:", d);
+
+  contentArea.innerHTML += `
+    <div class="content-card">
+      <img src="${d.image}" alt="Thumbnail">
+      <h2>${d.title}</h2>
+      <div class="links">
+        <a href="${d.link_public}" target="_blank">
+          LINK TANPA PASSWORD
+        </a>
+        <a href="${d.link_private}" target="_blank">
+          LINK DENGAN PASSWORD
+        </a>
+      </div>
+    </div>
+  `;
+});
   });
 </script>
 
