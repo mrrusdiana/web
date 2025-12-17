@@ -182,7 +182,7 @@ const partId = params.get("part") || "part1";
   const contentArea = document.getElementById("contentArea");
 
   const q = query(
-  collection(db, "pages", partId, "items")
+  collection(db, "parts", partId, "items")
 );
 
   onSnapshot(q, (snapshot) => {
