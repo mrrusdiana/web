@@ -201,10 +201,9 @@
   const container = document.getElementById("contentList");
 
   const q = query(
-    collection(db, "mainContents"),
-    where("active", "==", true),
-    orderBy("order")
-  );
+  collection(db, "mainContents"),
+  where("active", "==", true)
+);
 
   onSnapshot(q, (snapshot) => {
     container.innerHTML = "";
