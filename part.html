@@ -183,7 +183,7 @@ const partId = params.get("part") || "part1";
   const contentArea = document.getElementById("contentArea");
 
   const q = query(
-  collection(db, "parts", partId, "items"),
+  collection(db, "pages", partId, "items"),
   orderBy("order")
 );
 
